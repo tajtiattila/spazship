@@ -6,7 +6,7 @@ import pyglet, math, random
 from pyglet.window import key, mouse
 from pyglet.gl import *
 
-import pymunk
+import pymunk as pm
 
 FORGAS = math.radians(180) # fok/másodperc
 GYORSULAS = 100 # pixel/másodperc
@@ -34,7 +34,7 @@ jatekosKep.anchor_x, jatekosKep.anchor_y = ax, ay
 
 #
 
-vec = pymunk.Vec2d
+vec = pm.Vec2d
 def hossz(vec):
     return math.sqrt(sum((a*a for a in vec.v)))
 def iranyszog(v):
@@ -50,8 +50,14 @@ def forg_pymunk_to_pyglet(rotation):
 class Vilag:
     def __init__(self):
         self.elements = set()
-        self.space = pymunk.Space()
-        self.space.gravity = (vec(0,-GRAVITACIO))
+        self.space = pm.Space()
+        self.space.gravity = vec(0,-GRAVITACIO)
+        self.add_line(vec(-100,10),vec(1000,10))
+    def add_line(self,p1,p2):
+        body = pm.Body(pm.inf, pm.inf)
+        shape = pm.Segment(body, p1, p2, 0.0)
+        shape.friction = 0.5
+        self.space.add_static(shape)
     def add(self, item):
         self.elements.add(item)
     def rajzol(self):
@@ -72,13 +78,16 @@ class Jatekos:
 
     def __init__(self, kep, vilag):
         self.sprite = pyglet.sprite.Sprite(kep)
-        self.body = pymunk.Body(TOMEG,TOMEG)
+        self.body = pm.Body(TOMEG,TOMEG)
         self.body.position = self.pos
         self.body.velocity = self.seb
         self.body.angle = self.forg
+        #shape = pm.Poly(self.body, [vec(10,0),vec(-5,-8),vec(-5,8)])
+        shape = pm.Circle(self.body, 10)
+        shape.friction = 0.5
         self.sprite.scale = SCALE
         self.vilag = vilag
-        self.vilag.space.add(self.body)
+        self.vilag.space.add(self.body, shape)
     def rajzol(self):
         self.sprite.draw()
     def mozog(self, dt):
