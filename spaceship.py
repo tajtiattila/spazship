@@ -89,6 +89,7 @@ class Jatekos:
         if self.hajtomu:
             f = self.body.rotation_vector
             self.body.apply_impulse(f*TOLOERU_SULY_ARANY*GRAVITACIO*TOMEG*dt)
+            self.vilag.add(Fust(self, fustkepek))
         self.sprite.x = self.body.position[0]
         self.sprite.y = self.body.position[1]
         self.sprite.rotation = forg_pymunk_to_pyglet(self.body.angle)
@@ -97,13 +98,13 @@ class Jatekos:
 
 class Fust:
     def __init__(self, j, kepek):
-        self.pos = j.pos
-        iranyvec = irany(math.radians(jatekos.forg))
+        self.pos = vec(j.body.position)
+        iranyvec = j.body.rotation_vector
         rndvec = irany(math.radians(random.uniform(0,360))) * random.uniform(0, FUSTSEB/4)
-        self.seb = j.seb - iranyvec*FUSTSEB + rndvec
+        self.seb = j.body.velocity - iranyvec*FUSTSEB + rndvec
         self.sprite = pyglet.sprite.Sprite(random.choice(kepek))
         self.sprite.scale = SCALE
-        self.sprite.rotation = j.forg
+        self.sprite.rotation = j.sprite.rotation
         self.sprite.x = self.pos[0]
         self.sprite.y = self.pos[1]
         self.ido = self.teljesido = random.uniform(.2,1)
