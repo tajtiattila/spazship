@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="256"
+   height="256"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.47 r22583"
+   sodipodi:docname="spaceship.svg"
+   inkscape:export-filename="/Users/ata/Dropbox/python/spaceship.png"
+   inkscape:export-xdpi="180"
+   inkscape:export-ydpi="180">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3689">
+      <stop
+         style="stop-color:#f9ff06;stop-opacity:0.8211382;"
+         offset="0"
+         id="stop3691" />
+      <stop
+         id="stop3699"
+         offset="0.37209302"
+         style="stop-color:#f94b03;stop-opacity:1;" />
+      <stop
+         style="stop-color:#f90000;stop-opacity:0;"
+         offset="1"
+         id="stop3693" />
+    </linearGradient>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+    <filter
+       inkscape:collect="always"
+       id="filter3678">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.88002155"
+         id="feGaussianBlur3680" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter3682">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.88002155"
+         id="feGaussianBlur3684" />
+    </filter>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3689"
+       id="radialGradient3697"
+       cx="88"
+       cy="232"
+       fx="88"
+       fy="232"
+       r="24"
+       gradientUnits="userSpaceOnUse" />
+    <inkscape:perspective
+       id="perspective3729"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3689"
+       id="radialGradient3759"
+       gradientUnits="userSpaceOnUse"
+       cx="88"
+       cy="232"
+       fx="88"
+       fy="232"
+       r="24" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.5208438"
+     inkscape:cx="126.05088"
+     inkscape:cy="128"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:window-width="946"
+     inkscape:window-height="622"
+     inkscape:window-x="45"
+     inkscape:window-y="48"
+     inkscape:window-maximized="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2816"
+       empspacing="4"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true"
+       spacingx="4px"
+       spacingy="4px" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-796.36218)"
+     style="display:inline">
+    <path
+       style="fill:#ffffff;fill-opacity:0.6887967;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="M 128,16 64,144 c -8.433627,15.46165 -32,16 -32,16 l 32,48 48,0 16,-16 16,16 48,0 32,-48 c 0,0 -23.91777,-0.18695 -32,-16 L 128,16"
+       id="path2818"
+       transform="translate(0,796.36218)"
+       sodipodi:nodetypes="ccccccccccc" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer"
+     style="display:inline">
+    <path
+       style="fill:#000000;fill-opacity:0.13600003;stroke:none;filter:url(#filter3682)"
+       d="m 64,208 c 0,0 -0.621704,-48.43196 24,-48 23.75778,0 24,48 24,48"
+       id="path2821"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:#000000;fill-opacity:0.13600003;stroke:none;filter:url(#filter3678)"
+       d="m 144,208 c 0,0 -0.59808,-48 24,-48 23.89528,0 24,48 24,48"
+       id="path2823"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:#132e83;fill-opacity:0.59336093;stroke:none"
+       d="m 128,64 c 11.24484,0 16,7.566373 16,16 0.3514,16.515853 -7.56637,32 -16,32 -8.43363,0 -16,-15.484147 -16,-32 0,-7.730825 4.05236,-16 16,-16 z"
+       id="path2825"
+       sodipodi:nodetypes="ccccc" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="part1"
+     style="display:none">
+    <path
+       sodipodi:type="arc"
+       style="fill:url(#radialGradient3697);fill-opacity:1;stroke:none"
+       id="path3687"
+       sodipodi:cx="88"
+       sodipodi:cy="232"
+       sodipodi:rx="24"
+       sodipodi:ry="24"
+       d="m 112,232 a 24,24 0 1 1 -48,0 24,24 0 1 1 48,0 z" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="part2"
+     style="display:none">
+    <path
+       d="m 112,232 a 24,24 0 1 1 -48,0 24,24 0 1 1 48,0 z"
+       sodipodi:ry="24"
+       sodipodi:rx="24"
+       sodipodi:cy="232"
+       sodipodi:cx="88"
+       id="path3757"
+       style="fill:url(#radialGradient3759);fill-opacity:1;stroke:none;display:inline"
+       sodipodi:type="arc"
+       transform="translate(80,0)" />
+  </g>
+</svg>
