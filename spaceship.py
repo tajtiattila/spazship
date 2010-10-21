@@ -6,8 +6,13 @@ import pyglet, math, random
 from pyglet.window import key, mouse
 from pyglet.gl import *
 
-FORGAS = 180 # fok/másodperc
+import pymunk
+
+FORGAS = math.radians(180) # fok/másodperc
 GYORSULAS = 100 # pixel/másodperc
+TOMEG = 10000 # kg
+GRAVITACIO = 9.81
+TOLOERU_SULY_ARANY = 5
 FUSTSEB = 30
 GRAVITACIO = 30
 FPS = 60
@@ -29,39 +34,31 @@ jatekosKep.anchor_x, jatekosKep.anchor_y = ax, ay
 
 #
 
-class vec(object):
-    def __init__(self,*args):
-        self.v = tuple(args)
-    def __add__(self,other):
-        assert type(other) == vec
-        return vec(*[a+b for a,b in zip(self.v, other.v)])
-    def __sub__(self,other):
-        assert type(other) == vec
-        return vec(*[a-b for a,b in zip(self.v, other.v)])
-    def __mul__(self,other):
-        return vec(*[a*other for a in self.v])
-    def __div__(self,other):
-        return vec(*[a/other for a in self.v])
-    def __getitem__(self, n):
-        return self.v[n]
-    def __repr__(self):
-        return "vec(" + ",".join([repr(x) for x in self.v]) + ")"
+vec = pymunk.Vec2d
 def hossz(vec):
     return math.sqrt(sum((a*a for a in vec.v)))
+def iranyszog(v):
+    return math.degrees(math.atan2(v.y,v.x))
 def irany(d):
     return vec(math.sin(d), math.cos(d))
+def forg_pymunk_to_pyglet(rotation):
+    "Kiszámítja a pyglet-nek megadandó forgási szöget pymunk rendszerből"
+    return 90-math.degrees(rotation)
 
 #
 
 class Vilag:
     def __init__(self):
         self.elements = set()
+        self.space = pymunk.Space()
+        self.space.gravity = (vec(0,-GRAVITACIO))
     def add(self, item):
         self.elements.add(item)
     def rajzol(self):
         for valami in self.elements:
             valami.rajzol()
     def mozog(self, dt):
+        self.space.step(dt)
         for valami in list(self.elements):
             valami.mozog(dt)
             if valami.halott():
@@ -70,29 +67,31 @@ class Vilag:
 class Jatekos:
     pos = vec(50,50) # pozíció
     seb = vec(0,10) # sebesség pixel/másodperc
-    forg = 0 # felfele
+    forg = math.radians(90) # felfele
     jobbraForog = balraForog = hajtomu = False
 
     def __init__(self, kep, vilag):
         self.sprite = pyglet.sprite.Sprite(kep)
+        self.body = pymunk.Body(TOMEG,TOMEG)
+        self.body.position = self.pos
+        self.body.velocity = self.seb
+        self.body.angle = self.forg
         self.sprite.scale = SCALE
         self.vilag = vilag
+        self.vilag.space.add(self.body)
     def rajzol(self):
         self.sprite.draw()
     def mozog(self, dt):
         if self.jobbraForog:
-            self.forg += FORGAS*dt
+            self.body.angle -= FORGAS*dt
         elif self.balraForog:
-            self.forg -= FORGAS*dt
+            self.body.angle += FORGAS*dt
         if self.hajtomu:
-            iranyvec = irany(math.radians(self.forg))
-            self.seb += iranyvec*GYORSULAS*dt
-            self.vilag.add(Fust(self, fustkepek))
-        self.seb -= vec(0,GRAVITACIO*dt)
-        self.pos += self.seb*dt
-        self.sprite.x = self.pos[0]
-        self.sprite.y = self.pos[1]
-        self.sprite.rotation = self.forg
+            f = self.body.rotation_vector
+            self.body.apply_impulse(f*TOLOERU_SULY_ARANY*GRAVITACIO*TOMEG*dt)
+        self.sprite.x = self.body.position[0]
+        self.sprite.y = self.body.position[1]
+        self.sprite.rotation = forg_pymunk_to_pyglet(self.body.angle)
     def halott(self):
         return False
 
