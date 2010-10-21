@@ -17,8 +17,8 @@ config = pyglet.gl.Config(sample_buffers=1, samples=4)
 #ablak = pyglet.window.Window(config=config, resizable=True) 
 ablak = pyglet.window.Window()
 
-jatekosKep = pyglet.image.load('spaceship.png')
-fustkepek = [pyglet.image.load('fust{0}.png'.format(n)) for n in [1,2]]
+jatekosKep = pyglet.image.load('img/spaceship.png')
+fustkepek = [pyglet.image.load('img/fust{0}.png'.format(n)) for n in [1,2]]
 
 # anchor_x és _y egésznek kell legyen, ezért a // operátor
 ax = jatekosKep.width // 2
@@ -53,6 +53,20 @@ def irany(d):
 
 #
 
+class Vilag:
+    def __init__(self):
+        self.elements = set()
+    def add(self, item):
+        self.elements.add(item)
+    def rajzol(self):
+        for valami in self.elements:
+            valami.rajzol()
+    def mozog(self, dt):
+        for valami in list(self.elements):
+            valami.mozog(dt)
+            if valami.halott():
+                self.elements.remove(valami)
+
 class Jatekos:
     pos = vec(50,50) # pozíció
     seb = vec(0,10) # sebesség pixel/másodperc
@@ -73,7 +87,7 @@ class Jatekos:
         if self.hajtomu:
             iranyvec = irany(math.radians(self.forg))
             self.seb += iranyvec*GYORSULAS*dt
-            self.vilag += [Fust(self, fustkepek)]
+            self.vilag.add(Fust(self, fustkepek))
         self.seb -= vec(0,GRAVITACIO*dt)
         self.pos += self.seb*dt
         self.sprite.x = self.pos[0]
@@ -107,16 +121,15 @@ class Fust:
     def rajzol(self):
         self.sprite.draw()
 
-vilag = []
+vilag = Vilag()
 jatekos = Jatekos(jatekosKep, vilag)
-vilag += [jatekos]
+vilag.add(jatekos)
 
 @ablak.event
 def on_draw():
-    global fust
+    global vilag
     ablak.clear()
-    for valami in vilag:
-        valami.rajzol()
+    vilag.rajzol()
 
 @ablak.event
 def on_key_press(symbol, modifiers):
@@ -148,10 +161,7 @@ def on_key_release(symbol, modifiers):
 
 def frissit(dt):
     global vilag
-    for valami in vilag[:]:
-        valami.mozog(dt)
-        if valami.halott():
-            vilag.remove(valami)
+    vilag.mozog(dt)
 
 pyglet.clock.schedule_interval(frissit, 1/FPS)
 pyglet.app.run()
