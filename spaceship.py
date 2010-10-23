@@ -88,7 +88,7 @@ class Jatekos:
         self.body.position = self.pos
         self.body.velocity = self.seb
         self.body.angle = self.forg
-        shape = pm.Poly(self.body, [vec(7,0),vec(-2,6),vec(-5,4),vec(-5,-4),vec(-2,-6)])
+        shape = pm.Poly(self.body, [vec(9,0),vec(0,6),vec(-3,4),vec(-3,-4),vec(0,-6)])
         shape.friction = 0.5
         self.sprite.scale = SCALE
         self.vilag = vilag
