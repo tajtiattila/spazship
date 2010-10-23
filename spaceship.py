@@ -85,14 +85,18 @@ class Jatekos:
     def __init__(self, kep, vilag):
         self.sprite = pyglet.sprite.Sprite(kep)
         self.body = pm.Body(TOMEG,TOMEG)
+        shape1 = pm.Poly(self.body, [vec(9,0),vec(1,-4),vec(1,4)])
+        shape1.friction = 0.5
+        shape1.elasticity = 0.5
+        shape2 = pm.Poly(self.body, [vec(1,-4),vec(0,-6),vec(-3,-4),vec(-3,4),vec(0,6),vec(1,4)])
+        shape2.friction = 0.5
+        shape2.elasticity = 0.5
         self.body.position = self.pos
         self.body.velocity = self.seb
         self.body.angle = self.forg
-        shape = pm.Poly(self.body, [vec(9,0),vec(0,6),vec(-3,4),vec(-3,-4),vec(0,-6)])
-        shape.friction = 0.5
         self.sprite.scale = SCALE
         self.vilag = vilag
-        self.vilag.space.add(self.body, shape)
+        self.vilag.space.add(self.body, shape1, shape2)
     def rajzol(self):
         self.sprite.draw()
     def mozog(self, dt):
