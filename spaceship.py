@@ -19,7 +19,7 @@ FUSTSEB = 30
 GRAVITACIO = 30
 FPS = 60
 SCALE = 1/16
-W,H = 640,480
+W,H,BORDER = 640,480,10
 
 config = pyglet.gl.Config(sample_buffers=1, samples=4)
 #ablak = pyglet.window.Window(config=config, resizable=True) 
@@ -55,13 +55,13 @@ class Vilag:
         self.elements = set()
         self.space = pm.Space()
         self.space.gravity = vec(0,-GRAVITACIO)
-        self.add_line(vec(0,0),vec(W,0))
-        self.add_line(vec(0,0),vec(0,H))
-        self.add_line(vec(W,0),vec(W,H))
-        self.add_line(vec(0,H),vec(W,H))
+        self.add_line(vec(BORDER,BORDER),vec(W-BORDER,BORDER))
+        self.add_line(vec(BORDER,BORDER),vec(BORDER,H-BORDER))
+        self.add_line(vec(W-BORDER,BORDER),vec(W-BORDER,H-BORDER))
+        self.add_line(vec(BORDER,H-BORDER),vec(W-BORDER,H-BORDER))
     def add_line(self,p1,p2):
         body = pm.Body(pm.inf, pm.inf)
-        shape = pm.Segment(body, p1, p2, 0.0)
+        shape = pm.Segment(body, p1, p2, 2.0)
         shape.friction = 0.5
         self.space.add_static(shape)
     def add(self, item):
@@ -88,7 +88,7 @@ class Jatekos:
         self.body.position = self.pos
         self.body.velocity = self.seb
         self.body.angle = self.forg
-        shape = pm.Poly(self.body, [vec(10,0),vec(-5,-8),vec(-5,8)])
+        shape = pm.Poly(self.body, [vec(7,0),vec(-2,6),vec(-5,4),vec(-5,-4),vec(-2,-6)])
         shape.friction = 0.5
         self.sprite.scale = SCALE
         self.vilag = vilag
