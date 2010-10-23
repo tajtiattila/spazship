@@ -13,7 +13,9 @@ import pymunk as pm
 pm.init_pymunk()
 vec = pm.Vec2d
 
-FORGAS = math.radians(180) # fok/másodperc
+#FORGAS = math.radians(180) # fok/másodperc
+SHIP_ROT_TORQ_TIME = 0.3 # sec
+SHIP_ROT_TORQ_MAX = 100000 # Nm
 GYORSULAS = 100 # pixel/másodperc
 TOMEG = 10000 # kg
 GRAVITACIO = 9.81
@@ -111,11 +113,17 @@ class Vilag:
 
 
 
+def clamp(v, minv, maxv):
+    return minv if v < minv else maxv if maxv < v else v
+def clampabs(v, absv):
+    return clamp(v, -absv, absv)
+
 class Jatekos:
     pos = vec(50,50) # pozíció
     seb = vec(0,10) # sebesség pixel/másodperc
     forg = math.radians(90) # felfele
     jobbraForog = balraForog = hajtomu = False
+    rot_torq = 0
 
     def __init__(self, kep, vilag):
         self.sprite = pyglet.sprite.Sprite(kep)
@@ -136,9 +144,15 @@ class Jatekos:
         self.sprite.draw()
     def mozog(self, dt):
         if self.jobbraForog:
-            self.body.angle -= FORGAS*dt
+            self.rot_torq -= SHIP_ROT_TORQ_MAX*dt/SHIP_ROT_TORQ_TIME
         elif self.balraForog:
-            self.body.angle += FORGAS*dt
+            self.rot_torq += SHIP_ROT_TORQ_MAX*dt/SHIP_ROT_TORQ_TIME
+        else:
+            self.rot_torq = 0
+        self.rot_torq = clampabs(self.rot_torq, SHIP_ROT_TORQ_MAX)
+        if self.rot_torq:
+            self.body.apply_impulse(self.rot_torq*vec(0,1)*dt,vec(1,0))
+            self.body.apply_impulse(self.rot_torq*vec(0,-1)*dt,vec(-1,0))
         if self.hajtomu:
             f = self.body.rotation_vector
             self.body.apply_impulse(f*TOLOERU_SULY_ARANY*GRAVITACIO*TOMEG*dt)
