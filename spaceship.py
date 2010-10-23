@@ -53,20 +53,28 @@ def forg_pymunk_to_pyglet(rotation):
 class Vilag:
     def __init__(self):
         self.elements = set()
+        self.coords = []
         self.space = pm.Space()
         self.space.gravity = vec(0,-GRAVITACIO)
         self.add_line(vec(BORDER,BORDER),vec(W-BORDER,BORDER))
         self.add_line(vec(BORDER,BORDER),vec(BORDER,H-BORDER))
         self.add_line(vec(W-BORDER,BORDER),vec(W-BORDER,H-BORDER))
         self.add_line(vec(BORDER,H-BORDER),vec(W-BORDER,H-BORDER))
+        px, py = W/2,H/2
+        self.add_line(vec(px-100,py+20),vec(px-50,py))
+        self.add_line(vec(px-50,py),vec(px+50,py))
+        self.add_line(vec(px+50,py),vec(px+100,py+20))
     def add_line(self,p1,p2):
         body = pm.Body(pm.inf, pm.inf)
         shape = pm.Segment(body, p1, p2, 2.0)
         shape.friction = 0.5
         self.space.add_static(shape)
+        self.coords += [p1.x, p1.y, p2.x, p2.y]
+        self.vlist = pyglet.graphics.vertex_list(len(self.coords)//2, ('v2f', self.coords))
     def add(self, item):
         self.elements.add(item)
     def rajzol(self):
+        self.vlist.draw(GL_LINES)
         for valami in self.elements:
             valami.rajzol()
     def mozog(self, dt):
