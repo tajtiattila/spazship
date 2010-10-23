@@ -8,6 +8,8 @@ from pyglet.gl import *
 
 import pymunk as pm
 
+pm.init_pymunk()
+
 FORGAS = math.radians(180) # fok/másodperc
 GYORSULAS = 100 # pixel/másodperc
 TOMEG = 10000 # kg
