@@ -136,9 +136,11 @@ class Jatekos:
             shape.elasticity = 0.5
             return shape
         shapes = [mkshap(spec) for spec in jatekosShapeSpecs]
+        self.rotbody = pm.Body(pm.inf,pm.inf)
         self.body.position = self.pos
         self.body.velocity = self.seb
         self.body.angle = self.forg
+        self.rotbody.angle = self.forg
         self.sprite.scale = SCALE
         self.vilag = vilag
         self.vilag.space.add(self.body, *shapes)
@@ -146,13 +148,19 @@ class Jatekos:
         self.soundplayer.pause()
         self.soundplayer.queue(thrustSound)
         self.soundplayer.eos_action = pyglet.media.Player.EOS_LOOP
+        self.vilag.space.add(self.rotbody)
+        self.rotjoint = pm.SimpleMotor(self.body, self.rotbody, 0)
+        self.vilag.space.add(self.rotjoint)
+        self.rotjoint.max_force = 50*TOMEG
     def rajzol(self):
         self.sprite.draw()
     def mozog(self, dt):
         if self.jobbraForog:
-            self.body.angle -= FORGAS*dt
+            self.rotbody.angular_velocity = -FORGAS
         elif self.balraForog:
-            self.body.angle += FORGAS*dt
+            self.rotbody.angular_velocity = FORGAS
+        else:
+            self.rotbody.angular_velocity = 0
         if self.hajtomu:
             f = self.body.rotation_vector
             self.body.apply_impulse(f*TOLOERU_SULY_ARANY*GRAVITACIO*TOMEG*dt)
