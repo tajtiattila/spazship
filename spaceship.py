@@ -61,7 +61,7 @@ class Vilag:
     def __init__(self):
         self.elements = set()
         self.coords = []
-        self.space = pm.Space()
+        self.space = pm.Space(20,20)
         self.space.gravity = vec(0,-GRAVITACIO)
         self.add_line(vec(BORDER,BORDER),vec(W-BORDER,BORDER))
         self.add_line(vec(BORDER,BORDER),vec(BORDER,H-BORDER))
