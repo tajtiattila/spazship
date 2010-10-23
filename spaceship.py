@@ -19,10 +19,11 @@ FUSTSEB = 30
 GRAVITACIO = 30
 FPS = 60
 SCALE = 1/16
+W,H = 640,480
 
 config = pyglet.gl.Config(sample_buffers=1, samples=4)
 #ablak = pyglet.window.Window(config=config, resizable=True) 
-ablak = pyglet.window.Window()
+ablak = pyglet.window.Window(W,H)
 
 jatekosKep = pyglet.image.load('img/spaceship.png')
 fustkepek = [pyglet.image.load('img/fust{0}.png'.format(n)) for n in [1,2]]
@@ -54,7 +55,10 @@ class Vilag:
         self.elements = set()
         self.space = pm.Space()
         self.space.gravity = vec(0,-GRAVITACIO)
-        self.add_line(vec(-100,10),vec(1000,10))
+        self.add_line(vec(0,0),vec(W,0))
+        self.add_line(vec(0,0),vec(0,H))
+        self.add_line(vec(W,0),vec(W,H))
+        self.add_line(vec(0,H),vec(W,H))
     def add_line(self,p1,p2):
         body = pm.Body(pm.inf, pm.inf)
         shape = pm.Segment(body, p1, p2, 0.0)
@@ -84,8 +88,7 @@ class Jatekos:
         self.body.position = self.pos
         self.body.velocity = self.seb
         self.body.angle = self.forg
-        #shape = pm.Poly(self.body, [vec(10,0),vec(-5,-8),vec(-5,8)])
-        shape = pm.Circle(self.body, 10)
+        shape = pm.Poly(self.body, [vec(10,0),vec(-5,-8),vec(-5,8)])
         shape.friction = 0.5
         self.sprite.scale = SCALE
         self.vilag = vilag
