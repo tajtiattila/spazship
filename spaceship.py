@@ -16,6 +16,7 @@ vec = pm.Vec2d
 FORGAS = math.radians(180) # fok/másodperc
 GYORSULAS = 100 # pixel/másodperc
 TOMEG = 10000 # kg
+FORGAS_ERO = 20*TOMEG
 GRAVITACIO = 9.81
 TOLOERU_SULY_ARANY = 5
 FUSTSEB = 30
@@ -23,6 +24,9 @@ GRAVITACIO = 30
 FPS = 60
 SCALE = 1/16
 W,H,BORDER = 640,480,10
+
+COLL_STATIC = 1
+COLL_PLAYER = 2
 
 config = pyglet.gl.Config(sample_buffers=1, samples=4)
 #ablak = pyglet.window.Window(config=config, resizable=True) 
@@ -80,6 +84,7 @@ class Vilag:
         body = pm.Body(pm.inf, pm.inf)
         shape = pm.Segment(body, p1, p2, 1.0)
         shape.friction = 0.99
+        shape.collision_type = COLL_STATIC
         self.space.add_static(shape)
         self.coords += [p1.x, p1.y, p2.x, p2.y]
         self.vlist = pyglet.graphics.vertex_list(len(self.coords)//2, ('v2f', self.coords))
@@ -134,6 +139,7 @@ class Jatekos:
             shape = pm.Poly(self.body, [v*2 for v in spec])
             shape.friction = 0.5
             shape.elasticity = 0.5
+            shape.collision_type = COLL_PLAYER
             return shape
         shapes = [mkshap(spec) for spec in jatekosShapeSpecs]
         self.rotbody = pm.Body(pm.inf,pm.inf)
@@ -151,10 +157,14 @@ class Jatekos:
         self.vilag.space.add(self.rotbody)
         self.rotjoint = pm.SimpleMotor(self.body, self.rotbody, 0)
         self.vilag.space.add(self.rotjoint)
-        self.rotjoint.max_force = 50*TOMEG
+        self.rotjoint.max_force = FORGAS_ERO
+        self.rotation_rate = 1.0
+        self.vilag.space.add_collision_handler(COLL_PLAYER, COLL_STATIC, self.utkoz, None, None, None)
     def rajzol(self):
         self.sprite.draw()
     def mozog(self, dt):
+        self.rotation_rate += dt
+        self.rotjoint.max_force = clamp(self.rotation_rate, 0, 1) * FORGAS_ERO
         if self.jobbraForog:
             self.rotbody.angular_velocity = -FORGAS
         elif self.balraForog:
@@ -171,6 +181,9 @@ class Jatekos:
         self.pos, self.forg = self.body.position, forg_pymunk_to_pyglet(self.body.angle)
         self.sprite.x, self.sprite.y = self.pos
         self.sprite.rotation = self.forg
+    def utkoz(self, space, arbiter):
+        self.rotation_rate = -0.5
+        return True
     def halott(self):
         return False
 
