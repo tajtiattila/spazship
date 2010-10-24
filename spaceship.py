@@ -9,6 +9,7 @@ from pyglet.gl import *
 import pymunk as pm
 
 pm.init_pymunk()
+vec = pm.Vec2d
 
 FORGAS = math.radians(180) # fok/másodperc
 GYORSULAS = 100 # pixel/másodperc
@@ -28,6 +29,11 @@ ablak = pyglet.window.Window(W,H)
 jatekosKep = pyglet.image.load('img/spaceship.png')
 fustkepek = [pyglet.image.load('img/fust{0}.png'.format(n)) for n in [1,2]]
 
+jatekosShapeSpecs = [
+    [vec(9,0),vec(1,-4),vec(1,4)],
+    [vec(1,-4),vec(0,-6),vec(-3,-4),vec(-3,4),vec(0,6),vec(1,4)]
+]
+
 # anchor_x és _y egésznek kell legyen, ezért a // operátor
 ax = jatekosKep.width // 2
 ay = (jatekosKep.height * 6) // 16
@@ -37,7 +43,6 @@ jatekosKep.anchor_x, jatekosKep.anchor_y = ax, ay
 
 #
 
-vec = pm.Vec2d
 def hossz(vec):
     return math.sqrt(sum((a*a for a in vec.v)))
 def iranyszog(v):
@@ -111,18 +116,18 @@ class Jatekos:
     def __init__(self, kep, vilag):
         self.sprite = pyglet.sprite.Sprite(kep)
         self.body = pm.Body(TOMEG,TOMEG)
-        shape1 = pm.Poly(self.body, [vec(9,0),vec(1,-4),vec(1,4)])
-        shape1.friction = 0.5
-        shape1.elasticity = 0.5
-        shape2 = pm.Poly(self.body, [vec(1,-4),vec(0,-6),vec(-3,-4),vec(-3,4),vec(0,6),vec(1,4)])
-        shape2.friction = 0.5
-        shape2.elasticity = 0.5
+        def mkshap(spec):
+            shape = pm.Poly(self.body, [v*2 for v in spec])
+            shape.friction = 0.5
+            shape.elasticity = 0.5
+            return shape
+        shapes = [mkshap(spec) for spec in jatekosShapeSpecs]
         self.body.position = self.pos
         self.body.velocity = self.seb
         self.body.angle = self.forg
         self.sprite.scale = SCALE
         self.vilag = vilag
-        self.vilag.space.add(self.body, shape1, shape2)
+        self.vilag.space.add(self.body, *shapes)
     def rajzol(self):
         self.sprite.draw()
     def mozog(self, dt):
