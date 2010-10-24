@@ -1,0 +1,3 @@
+- collision handling based on collision location and total collision impulse
+- rounded collider (multiple circles?)
+- add rotation thrusters
