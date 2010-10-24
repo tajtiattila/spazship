@@ -29,6 +29,7 @@ config = pyglet.gl.Config(sample_buffers=1, samples=4)
 ablak = pyglet.window.Window(W,H)
 
 jatekosKep = pyglet.image.load('img/spaceship.png')
+thrustSound = pyglet.media.load('img/thrust.mp3', streaming=False)
 fustkepek = [pyglet.image.load('img/fust{0}.png'.format(n)) for n in [1,2]]
 
 jatekosShapeSpecs = [
@@ -132,6 +133,10 @@ class Jatekos:
         self.sprite.scale = SCALE
         self.vilag = vilag
         self.vilag.space.add(self.body, *shapes)
+        self.soundplayer = pyglet.media.Player()
+        self.soundplayer.pause()
+        self.soundplayer.queue(thrustSound)
+        self.soundplayer.eos_action = pyglet.media.Player.EOS_LOOP
     def rajzol(self):
         self.sprite.draw()
     def mozog(self, dt):
@@ -143,6 +148,9 @@ class Jatekos:
             f = self.body.rotation_vector
             self.body.apply_impulse(f*TOLOERU_SULY_ARANY*GRAVITACIO*TOMEG*dt)
             self.vilag.add(Fust(self, fustkepek))
+            self.soundplayer.play()
+        else:
+            self.soundplayer.pause()
         self.sprite.x = self.body.position[0]
         self.sprite.y = self.body.position[1]
         self.sprite.rotation = forg_pymunk_to_pyglet(self.body.angle)
