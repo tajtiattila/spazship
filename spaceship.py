@@ -24,6 +24,7 @@ GRAVITACIO = 30
 FPS = 60
 SCALE = 1/16
 W,H,BORDER = 640,480,10
+COLL_LIMIT = 10000
 
 COLL_STATIC = 1
 COLL_PLAYER = 2
@@ -53,7 +54,7 @@ thrustKep.anchor_x, thrustKep.anchor_y = thrustKep.width // 2, thrustKep.height
 #
 
 def hossz(vec):
-    return math.sqrt(sum((a*a for a in vec.v)))
+    return math.sqrt(sum((a*a for a in vec)))
 def iranyszog(v):
     return math.degrees(math.atan2(v.y,v.x))
 def irany(d):
@@ -159,7 +160,7 @@ class Jatekos:
         self.vilag.space.add(self.rotjoint)
         self.rotjoint.max_force = FORGAS_ERO
         self.rotation_rate = 1.0
-        self.vilag.space.add_collision_handler(COLL_PLAYER, COLL_STATIC, self.utkoz, None, None, None)
+        self.vilag.space.add_collision_handler(COLL_PLAYER, COLL_STATIC, None, None, self.utkoz, None)
     def rajzol(self):
         self.sprite.draw()
     def mozog(self, dt):
@@ -181,11 +182,13 @@ class Jatekos:
         self.pos, self.forg = self.body.position, forg_pymunk_to_pyglet(self.body.angle)
         self.sprite.x, self.sprite.y = self.pos
         self.sprite.rotation = self.forg
-    def utkoz(self, space, arbiter):
-        self.rotation_rate = -0.5
-        return True
     def halott(self):
         return False
+    def utkoz(self, space, arbiter):
+        imp = pm._chipmunk.cpArbiterTotalImpulse(arbiter._arbiter)
+        if hossz(imp) > COLL_LIMIT:
+            self.rotation_rate = -0.5
+            print(imp)
 
 class Thruster:
     def __init__(self, player, offset):
@@ -208,6 +211,7 @@ class Thruster:
         self.sprite.opacity = random.randint(128,255)
     def halott(self):
         return False
+
 class Fust:
     def __init__(self, j, kepek):
         self.pos = vec(j.body.position)
