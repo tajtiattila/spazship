@@ -29,6 +29,7 @@ config = pyglet.gl.Config(sample_buffers=1, samples=4)
 ablak = pyglet.window.Window(W,H)
 
 jatekosKep = pyglet.image.load('img/spaceship.png')
+thrustKep = pyglet.image.load('img/flame.png')
 thrustSound = pyglet.media.load('img/thrust.mp3', streaming=False)
 fustkepek = [pyglet.image.load('img/fust{0}.png'.format(n)) for n in [1,2]]
 
@@ -43,6 +44,7 @@ ay = (jatekosKep.height * 6) // 16
 for fustkep in fustkepek:
     fustkep.anchor_x, fustkep.anchor_y = ax, ay
 jatekosKep.anchor_x, jatekosKep.anchor_y = ax, ay
+thrustKep.anchor_x, thrustKep.anchor_y = thrustKep.width // 2, thrustKep.height
 
 #
 
@@ -112,6 +114,13 @@ class Vilag:
 
 
 
+def clamp(v, minv, maxv):
+    return minv if v < minv else maxv if maxv < v else v
+def clampabs(v, absv):
+    return clamp(v, -absv, absv)
+def normal(v):
+    return vec(v[1], -v[0])
+
 class Jatekos:
     pos = vec(50,50) # pozíció
     seb = vec(0,10) # sebesség pixel/másodperc
@@ -147,16 +156,37 @@ class Jatekos:
         if self.hajtomu:
             f = self.body.rotation_vector
             self.body.apply_impulse(f*TOLOERU_SULY_ARANY*GRAVITACIO*TOMEG*dt)
-            self.vilag.add(Fust(self, fustkepek))
+            #self.vilag.add(Fust(self, fustkepek))
             self.soundplayer.play()
         else:
             self.soundplayer.pause()
-        self.sprite.x = self.body.position[0]
-        self.sprite.y = self.body.position[1]
-        self.sprite.rotation = forg_pymunk_to_pyglet(self.body.angle)
+        self.pos, self.forg = self.body.position, forg_pymunk_to_pyglet(self.body.angle)
+        self.sprite.x, self.sprite.y = self.pos
+        self.sprite.rotation = self.forg
     def halott(self):
         return False
 
+class Thruster:
+    def __init__(self, player, offset):
+        self.player = player
+        self.offset = offset
+        self.sprite = pyglet.sprite.Sprite(thrustKep)
+        self.sprite.scale = SCALE
+        self.mozog(0)
+    def rajzol(self):
+        if self.player.hajtomu:
+            self.sprite.x, self.sprite.y = self.pos
+            self.sprite.draw()
+    def mozog(self, dt):
+        vx = self.player.body.rotation_vector
+        vy = normal(vx)
+        self.pos = self.player.pos + vx*self.offset.x + vy*self.offset.y
+        self.forg = self.player.forg + random.randrange(-10,10)
+        self.sprite.x, self.sprite.y = self.pos
+        self.sprite.rotation = self.forg
+        self.sprite.opacity = random.randint(128,255)
+    def halott(self):
+        return False
 class Fust:
     def __init__(self, j, kepek):
         self.pos = vec(j.body.position)
@@ -185,6 +215,8 @@ class Fust:
 vilag = Vilag()
 jatekos = Jatekos(jatekosKep, vilag)
 vilag.add(jatekos)
+vilag.add(Thruster(jatekos, vec(-6,5)))
+vilag.add(Thruster(jatekos, vec(-6,-5)))
 
 @ablak.event
 def on_draw():
