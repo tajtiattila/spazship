@@ -38,7 +38,7 @@ thrustSound = pyglet.media.load('img/thrust.mp3', streaming=False)
 fustkepek = [pyglet.image.load('img/fust{0}.png'.format(n)) for n in [1,2]]
 
 jatekosShapeSpecs = [
-    [vec(9,0),vec(1,-4),vec(1,4)],
+    [vec(9,0),vec(1,-4),vec(-3,-4),vec(-3,4),vec(1,4)],
     [vec(1,-4),vec(0,-6),vec(-3,-4),vec(-3,4),vec(0,6),vec(1,4)]
 ]
 
@@ -68,7 +68,7 @@ class Vilag:
     def __init__(self):
         self.elements = set()
         self.coords = []
-        self.space = pm.Space(20,20)
+        self.space = pm.Space()
         self.space.gravity = vec(0,-GRAVITACIO)
         self.add_line(vec(BORDER,BORDER),vec(W-BORDER,BORDER))
         self.add_line(vec(BORDER,BORDER),vec(BORDER,H-BORDER))
