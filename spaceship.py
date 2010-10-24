@@ -128,12 +128,13 @@ def normal(v):
     return vec(v[1], -v[0])
 
 class Jatekos:
-    pos = vec(50,50) # pozíció
-    seb = vec(0,10) # sebesség pixel/másodperc
-    forg = math.radians(90) # felfele
+    POS = vec(50,50) # pozíció
+    SEB = vec(0,10) # sebesség pixel/másodperc
+    FORG = math.radians(90) # felfele
     jobbraForog = balraForog = hajtomu = False
 
     def __init__(self, kep, vilag):
+        self.pos, self.seb, self.forg = self.POS, self.SEB, self.FORG
         self.sprite = pyglet.sprite.Sprite(kep)
         self.body = pm.Body(TOMEG,TOMEG)
         def mkshap(spec):
@@ -161,6 +162,11 @@ class Jatekos:
         self.rotjoint.max_force = FORGAS_ERO
         self.rotation_rate = 1.0
         self.vilag.space.add_collision_handler(COLL_PLAYER, COLL_STATIC, None, None, self.utkoz, None)
+    def reset(self):
+        self.pos, self.seb, self.forg = self.POS, self.SEB, self.FORG
+        self.body.position = self.pos
+        self.body.velocity = self.seb
+        self.body.angle = self.forg
     def rajzol(self):
         self.sprite.draw()
     def mozog(self, dt):
@@ -276,6 +282,8 @@ def on_key_release(symbol, modifiers):
         jatekos.hajtomu = False
     elif symbol == key.DOWN:
         jatekos.fek = False
+    elif symbol == key.ENTER:
+        jatekos.reset()
 
 def frissit(dt):
     global vilag
