@@ -6,6 +6,8 @@ import pyglet, math, random
 from pyglet.window import key, mouse
 from pyglet.gl import *
 
+import sys
+
 import pymunk as pm
 
 pm.init_pymunk()
@@ -70,6 +72,7 @@ class Vilag:
         self.add_line(vec(px-50,py),vec(px+50,py))
         self.add_line(vec(px+50,py),vec(px+100,py+20))
         self.drawSpaceMap = {}
+        self.doDrawSpace = 'drawspace' in sys.argv[1:]
     def add_line(self,p1,p2):
         body = pm.Body(pm.inf, pm.inf)
         shape = pm.Segment(body, p1, p2, 2.0)
@@ -80,7 +83,8 @@ class Vilag:
     def add(self, item):
         self.elements.add(item)
     def rajzol(self):
-        self.drawSpace()
+        if self.doDrawSpace:
+            self.drawSpace()
         self.vlist.draw(GL_LINES)
         for valami in self.elements:
             valami.rajzol()
