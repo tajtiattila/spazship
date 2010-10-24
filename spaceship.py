@@ -64,6 +64,7 @@ class Vilag:
         self.add_line(vec(px-100,py+20),vec(px-50,py))
         self.add_line(vec(px-50,py),vec(px+50,py))
         self.add_line(vec(px+50,py),vec(px+100,py+20))
+        self.drawSpaceMap = {}
     def add_line(self,p1,p2):
         body = pm.Body(pm.inf, pm.inf)
         shape = pm.Segment(body, p1, p2, 2.0)
@@ -74,6 +75,7 @@ class Vilag:
     def add(self, item):
         self.elements.add(item)
     def rajzol(self):
+        self.drawSpace()
         self.vlist.draw(GL_LINES)
         for valami in self.elements:
             valami.rajzol()
@@ -83,6 +85,22 @@ class Vilag:
             valami.mozog(dt)
             if valami.halott():
                 self.elements.remove(valami)
+    def drawSpace(self):
+        for shape in self.space.shapes:
+            if type(shape) == pm.Poly:
+                self.drawPoly(shape)
+    def drawPoly(self,poly):
+        if id(poly) not in self.drawSpaceMap:
+            vf = reduce(lambda x,y: x+y, ([float(v.x),float(v.y)] for v in poly.verts), [])
+            self.drawSpaceMap[id(poly)] = pyglet.graphics.vertex_list(len(vf)//2, ('v2f', vf))
+        glPushMatrix()
+        glTranslatef(poly.body.position.x, poly.body.position.y, 0)
+        glRotatef(math.degrees(poly.body.angle), 0,0,1)
+        vl = self.drawSpaceMap[id(poly)]
+        vl.draw(GL_LINE_LOOP)
+        glPopMatrix()
+
+
 
 class Jatekos:
     pos = vec(50,50) # pozíció
