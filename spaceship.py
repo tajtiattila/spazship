@@ -75,8 +75,8 @@ class Vilag:
         self.doDrawSpace = 'drawspace' in sys.argv[1:]
     def add_line(self,p1,p2):
         body = pm.Body(pm.inf, pm.inf)
-        shape = pm.Segment(body, p1, p2, 2.0)
-        shape.friction = 0.5
+        shape = pm.Segment(body, p1, p2, 1.0)
+        shape.friction = 0.99
         self.space.add_static(shape)
         self.coords += [p1.x, p1.y, p2.x, p2.y]
         self.vlist = pyglet.graphics.vertex_list(len(self.coords)//2, ('v2f', self.coords))
